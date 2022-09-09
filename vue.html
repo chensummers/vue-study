@@ -108,52 +108,52 @@
       data() {
         return {
           name: 'vue',
-          n: 4,
+          n: [1,2,3],
           isShowChild: true
         }
       },
-      beforeCreate() {
-        console.log('parent--beforeCreate=====',this.$data,this.$el,this.$options)
-      },
-      created() {
-        console.log('parent--created=====',this.$data,this.$el,this.$methods)
-      },
-      beforeMount() {
-        console.log('parent--beforeMount=====',this.$data,this.$el,this.$methods)
-      },
-      mounted() {
-        console.log('parent--mounted=====',this,this.$methods)
-      },
-      beforeUpdate() {
-        console.log('parent--beforeUpdate=====',this)
-      },
-      updated() {
-        console.log('parent--updated=====',this)
-      },
-      beforeDestroy() {
-        console.log('parent--beforeDestroy=====',this)
-      },
-      destroyed() {
-        console.log('parent--destroyed=====',this)
-      },
-      activated() {
-        console.log('parent--activated=====',this)
-      },
-      renderTracked(a) {
-        // console.log('renderTracked=====',a)
-      },
-      renderTriggered(b) {
-        console.log('parent--renderTriggered=====',b)
-      },
-      serverPrefetch() {
-        console.log('parent--serverPrefetch=====',this)
-      },
+      // beforeCreate() {
+      //   console.log('parent--beforeCreate=====',this.$data,this.$el,this.$options)
+      // },
+      // created() {
+      //   console.log('parent--created=====',this.$data,this.$el,this.$methods)
+      // },
+      // beforeMount() {
+      //   console.log('parent--beforeMount=====',this.$data,this.$el,this.$methods)
+      // },
+      // mounted() {
+      //   console.log('parent--mounted=====',this,this.$methods)
+      // },
+      // beforeUpdate() {
+      //   console.log('parent--beforeUpdate=====',this)
+      // },
+      // updated() {
+      //   console.log('parent--updated=====',this)
+      // },
+      // beforeDestroy() {
+      //   console.log('parent--beforeDestroy=====',this)
+      // },
+      // destroyed() {
+      //   console.log('parent--destroyed=====',this)
+      // },
+      // activated() {
+      //   console.log('parent--activated=====',this)
+      // },
+      // renderTracked(a) {
+      //   // console.log('renderTracked=====',a)
+      // },
+      // renderTriggered(b) {
+      //   console.log('parent--renderTriggered=====',b)
+      // },
+      // serverPrefetch() {
+      //   console.log('parent--serverPrefetch=====',this)
+      // },
       methods:{
         add() {
-          this.n++
+          this.n = this.n.push(this.n.length+1)
         },
         sub() {
-          this.n--
+          this.n.pop()
         },
         showChild() {
           this.isShowChild = !this.isShowChild

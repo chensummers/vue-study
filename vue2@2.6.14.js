@@ -920,6 +920,7 @@
    * collect dependencies and dispatch updates.
    */
   var Observer = function Observer (value) {
+    debugger
     this.value = value;
     this.dep = new Dep();
     this.vmCount = 0;
