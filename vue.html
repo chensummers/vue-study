@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>vue</title>
+  <!-- <script src="./vue2@2.7.2.10.js"></script> -->
+  <script src="./vue2@2.6.14.js"></script>
+  <style>
+    .span {
+      padding: 10px;
+      display: inline-block;
+      background-color: antiquewhite;
+      color: black;
+    }
+  </style>
+  
+</head>
+<body>
+  <div id="app">
+    <my-component v-if="isShowChild"></my-component>
+    <div class="wrap">
+      <!-- <div class="name">{{name}}</div> -->
+      <div class="wrap-n">
+        <span class="span" v-for="i in n" :key="i">{{i}}</span>
+      </div>
+      <button @click="add">add</button>
+      <button @click="sub">sub</button>
+      <button @click="showChild">显示/隐藏</button>
+      <!-- <input v-model="name"/> -->
+    </div>
+  </div>
+  <script>
+    // import {ref} from 'vue'
+    // console.log(ref,'ref')
+    Vue.component('my-component1', {
+      data() {
+        return {
+          b:'2222'
+        }
+      },
+      mounted() {
+        console.log('my-component1=====mounted===========',this)
+      },
+      template:`<span>========my-component1========={{b}}</span>`
+    })
+    Vue.component('my-component', {
+      inject: ['a'],
+      data() {
+        return {
+          name: 'my-componentsdd'
+        }
+      },
+      beforeCreate() {
+        console.log('my-componentsdd======beforeCreate==========',this,)
+      },
+      created() {
+        console.log('my-componentsdd=======created=========',this)
+      },
+      beforeMount() {
+        console.log('my-componentsdd=======beforeMount=========',this)
+      },
+      mounted() {
+        console.log('my-componentsdd=====mounted===========',this)
+      },
+      beforeUpdate() {
+        console.log('my-componentsdd======beforeUpdate==========',this)
+      },
+      updated() {
+        console.log('my-componentsdd======updated==========',this)
+      },
+      beforeDestroy() {
+        console.log('my-componentsdd=======beforeDestroy=========',this)
+      },
+      unMounted() {
+        console.log('my-componentsdd=======unmounted=========',this)
+      },
+      destroyed() {
+        console.log('my-componentsdd=======destroyed=========',this)
+      },
+      activated() {
+        console.log('my-componentsdd========activated========',this)
+      },
+      renderTracked(a) {
+        console.log('my-componentsdd======renderTracked==========',a)
+      },
+      renderTriggered(b) {
+        console.log('my-componentsdd=======renderTriggered=========',b)
+      },
+      serverPrefetch() {
+        console.log('my-componentsdd======serverPrefetch==========',this)
+      },
+      template: `
+        <div>这是一个组件---{{name}}-------{{a}} <my-component1></my-component1></div>
+      `
+    })
+  </script>
+  <script>
+    
+    const vue = new Vue({
+      el:'#app',
+      provide() {
+        return {
+          a:1
+        }
+      },
+      data() {
+        return {
+          name: 'vue',
+          n: 4,
+          isShowChild: true
+        }
+      },
+      beforeCreate() {
+        console.log('parent--beforeCreate=====',this.$data,this.$el,this.$options)
+      },
+      created() {
+        console.log('parent--created=====',this.$data,this.$el,this.$methods)
+      },
+      beforeMount() {
+        console.log('parent--beforeMount=====',this.$data,this.$el,this.$methods)
+      },
+      mounted() {
+        console.log('parent--mounted=====',this,this.$methods)
+      },
+      beforeUpdate() {
+        console.log('parent--beforeUpdate=====',this)
+      },
+      updated() {
+        console.log('parent--updated=====',this)
+      },
+      beforeDestroy() {
+        console.log('parent--beforeDestroy=====',this)
+      },
+      destroyed() {
+        console.log('parent--destroyed=====',this)
+      },
+      activated() {
+        console.log('parent--activated=====',this)
+      },
+      renderTracked(a) {
+        // console.log('renderTracked=====',a)
+      },
+      renderTriggered(b) {
+        console.log('parent--renderTriggered=====',b)
+      },
+      serverPrefetch() {
+        console.log('parent--serverPrefetch=====',this)
+      },
+      methods:{
+        add() {
+          this.n++
+        },
+        sub() {
+          this.n--
+        },
+        showChild() {
+          this.isShowChild = !this.isShowChild
+        }
+        
+      }
+    })
+  </script>
+  <script>
+    function chartStr(str) {
+      let obj={},objKey={},arr=[],_arr=str.split('');
+      _arr.map(s=>{
+        if(arr.includes(s)) {
+          obj[s]++
+        }else {
+          obj[s] = 1
+          arr.push(s)
+        }
+      })
+      // 从大到小排列
+      let num = Object.values(obj).sort()
+      let min = num[0],max=num.slice(-1)[0],minS=[],maxS=[];
+      for(let key in obj) {
+        let _i = obj[key]
+        if(objKey[_i]) {
+          objKey[_i].push(key)
+        }else {
+          objKey[_i] = [key]
+        }
+      }
+      return {
+        min,
+        max,
+        objKey,
+        minS: objKey[min],
+        maxS: objKey[max],
+        objNum: obj,
+        origin: str
+      }
+    }
+
+    function characte(str) {
+      if(!str) return null
+      let obj={},objKey={},arr=str.split('').sort().join('').match(/(\w)\1*/g).sort((a,b)=>a.length-b.length),len=arr.length;
+      let minS=[],min=arr[0].length,maxS=[],max=arr[0].length;
+      arr.map(s=>{
+        let num = s.length, c = s.slice(0,1);
+        obj[c] = num
+        if(objKey[num]) {
+          objKey[num].push(c)
+        }else {
+          objKey[num] = [c]
+        }
+        
+        if(num>=max) max = num
+        if(num<=min) min = num
+      })
+      
+      return {
+        min,
+        max,
+        objKey,
+        minS: objKey[min],
+        maxS: objKey[max],
+        objNum: obj,
+        origin: str
+      }
+    }
+    let obj1 = chartStr('nqsdfsdfaaadsdwwqeeqwssd')
+    let obj2 = characte('nqsdfsdfaaadsdwwqeeqwssd')
+    // console.log(obj1,obj2)
+    // nodeName 元素节点 [DIV,SPAN,BUTTON]  文本节点时返回 '#text'
+                
+    const NODE_TYPE = {
+      1:'ELEMENT_NODE', // 一个 元素 节点，例如 <p> 和 <div>。
+      2:'ATTRIBUTE_NODE', // 元素 的耦合 属性。
+      3:'TEXT_NODE', // Element 或者 Attr 中实际的 文字
+      4:'CDATA_SECTION_NODE',// 一个 CDATASection，例如 <!CDATA[[ … ]]>。
+      5:'',// 
+      6:'',// 
+      7:'PROCESSING_INSTRUCTION_NODE',// 一个用于 XML 文档的 ProcessingInstruction (en-US) ，例如 <?xml-stylesheet ... ?> 声明。
+      8:'COMMENT_NODE',// 一个 Comment 节点。
+      9:'DOCUMENT_NODE',// 一个 Document 节点。
+      10:'DOCUMENT_TYPE_NODE',// 描述文档类型的 DocumentType 节点。例如 <!DOCTYPE html> 就是用于 HTML5 的。
+      11:'DOCUMENT_FRAGMENT_NODE',// 一个 DocumentFragment 节点
+    }
+  </script>
+</body>
+</html>
