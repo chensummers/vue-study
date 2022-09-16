@@ -6245,7 +6245,7 @@
         }
       }
     }
-
+  /***************6248*******************/ 
     function removeVnodes (vnodes, startIdx, endIdx) {
       for (; startIdx <= endIdx; ++startIdx) {
         var ch = vnodes[startIdx];
