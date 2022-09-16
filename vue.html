@@ -15,35 +15,67 @@
       color: black;
     }
   </style>
-  
 </head>
 <body>
   <div id="app">
-    <my-component v-if="isShowChild"></my-component>
-    <div class="wrap">
-      <!-- <div class="name">{{name}}</div> -->
+    <!-- <keep-alive max="2" include="my-component,my-component-a,my-component-b">
+      <my-component v-if="isShowChild" ref="myCom">
+        <template #t>
+          <input>
+        </template>
+        <div>this is default slot</div>
+      </my-component>
+      <component :is="name"></component>
+    </keep-alive>
+    <div ref="nameRef">{{name}}=========>{{m}}===f{{f}}</div>
+    <div>{{mixin}}</div> -->
+    <div :class="['wrap',{actived:isShow}]">
       <div class="wrap-n">
-        <span class="span" v-for="i in n" :key="i">{{i}}</span>
+        <span class="span" v-for="i in n" :key="i" >{{i}}</span>
       </div>
-      <button @click="add">add</button>
-      <button @click="sub">sub</button>
-      <button @click="showChild">显示/隐藏</button>
-      <!-- <input v-model="name"/> -->
+      <button v-once @click="add">add</button>
+      <button @click="sub" v-once>sub</button>
+      <button @click="splice" v-once>splice</button>
+      <button @click="showChild" v-once>显示/隐藏</button>
     </div>
+    <!-- <input v-model="name"/> -->
+    <!-- <button @click="name = 'my-component' ">my-component</button>
+    <button @click="name = 'my-component-a' ">my-component-a</button>
+    <button @click="name = 'my-component-b' ">my-component-b</button> -->
   </div>
   <script>
+    // const per = window.performance
+    // console.log('per==========>',per)
     // import {ref} from 'vue'
     // console.log(ref,'ref')
-    Vue.component('my-component1', {
+    Vue.component('my-component-a',{
+      template:`<div>my-component-a: <input /></div>`
+    })
+    Vue.component('my-component-b', {
       data() {
         return {
           b:'2222'
         }
       },
-      mounted() {
-        console.log('my-component1=====mounted===========',this)
+      // beforeCreate() {
+      //   console.log('my-component-s==>beforeCreate')
+      // },
+      // created() {
+      //   console.log('my-component-s==>created')
+      // },
+      // beforeMount() {
+      //   console.log('my-component-s==>beforeMount')
+      // },
+      async mounted() {
+        // console.log('my-component1=====mounted===========',this)
+        // const nextT = await this.$nextTick(()=>{
+        //   console.log(this,'===============>this')
+        //   this.$destroy()
+        // })
+        // console.log(nextT,'next=======>')
+        // console.log('my-component-s==>mounted')
       },
-      template:`<span>========my-component1========={{b}}</span>`
+      template:`<div>my-component-b: <input /></div>`
     })
     Vue.component('my-component', {
       inject: ['a'],
@@ -52,78 +84,117 @@
           name: 'my-componentsdd'
         }
       },
-      beforeCreate() {
-        console.log('my-componentsdd======beforeCreate==========',this,)
-      },
-      created() {
-        console.log('my-componentsdd=======created=========',this)
-      },
-      beforeMount() {
-        console.log('my-componentsdd=======beforeMount=========',this)
-      },
-      mounted() {
-        console.log('my-componentsdd=====mounted===========',this)
-      },
-      beforeUpdate() {
-        console.log('my-componentsdd======beforeUpdate==========',this)
-      },
-      updated() {
-        console.log('my-componentsdd======updated==========',this)
-      },
-      beforeDestroy() {
-        console.log('my-componentsdd=======beforeDestroy=========',this)
-      },
-      unMounted() {
-        console.log('my-componentsdd=======unmounted=========',this)
-      },
-      destroyed() {
-        console.log('my-componentsdd=======destroyed=========',this)
-      },
-      activated() {
-        console.log('my-componentsdd========activated========',this)
-      },
-      renderTracked(a) {
-        console.log('my-componentsdd======renderTracked==========',a)
-      },
-      renderTriggered(b) {
-        console.log('my-componentsdd=======renderTriggered=========',b)
-      },
-      serverPrefetch() {
-        console.log('my-componentsdd======serverPrefetch==========',this)
-      },
+      
       template: `
-        <div>这是一个组件---{{name}}-------{{a}} <my-component1></my-component1></div>
+        <div>
+          <input />
+          
+        </div>
       `
     })
+    // <slot name="t"></slot>
+    //       <slot />
+    //       <my-component-s><div>my-component-s1</div></my-component-s>
+    //       <my-component-s><div>my-component-s1</div></my-component-s>
+    //       <child-com></child-com>
   </script>
   <script>
-    
-    const vue = new Vue({
-      el:'#app',
-      provide() {
-        return {
-          a:1
+    function pluginxxx() {
+      return {
+        api(a) {
+          conosle.log(a,'pluginxxx')
         }
-      },
+      }
+    }
+    Vue.use(pluginxxx)
+    const mixin = {
       data() {
         return {
-          name: 'vue',
-          n: [1,2,3],
-          isShowChild: true
+          mixin:'this is mix'
         }
       },
-      // beforeCreate() {
-      //   console.log('parent--beforeCreate=====',this.$data,this.$el,this.$options)
-      // },
-      // created() {
-      //   console.log('parent--created=====',this.$data,this.$el,this.$methods)
-      // },
-      // beforeMount() {
-      //   console.log('parent--beforeMount=====',this.$data,this.$el,this.$methods)
-      // },
-      // mounted() {
-      //   console.log('parent--mounted=====',this,this.$methods)
-      // },
+      beforeCreate() {
+        // console.log('mixin============>beforeCreate')
+      },
+      created() {
+        // console.log('mixin============>created')
+      },
+      beforeMount() {
+        // console.log('mixin============>beforeMount')
+      },
+      mounted() {
+        // console.log(this)
+        // console.log('mixin====flux========>mounted')
+      },
+    }
+  </script>
+  <script>
+    const num = ()=> Math.ceil(Math.random()*1000+2)
+    const vue = new Vue({
+      el:'#app',
+      props: {
+        text: {
+          type: String,
+          default: ''
+        }
+      },
+      provide() {
+        return {
+          a:23
+        }
+      },
+      mixins: [mixin],
+      data() {
+        return {
+          name: 'my-component',
+          // n: [num(),num(),num()],
+          n: [2,3,4],
+          isShowChild: true,
+          isShow: true
+        }
+      },
+      computed:{
+        f(){
+          return this.n.length *2
+        },
+        m:{
+          get() {
+            return this.n.length
+          },
+          set(v) {
+            console.log(v,'v-----')
+          }
+        }
+      },
+      watch: {
+        name:{
+          handler(n,o) {
+
+            // console.log('this is watcher',this.name,)
+          },
+          immediate: true
+        },
+        n(n,o) {
+          console.log('watch--------n',n)
+        }
+      },
+      beforeCreate() {
+        // console.log('parent--beforeCreate=====',this)
+      },
+      created() {
+        // this.name = 22222
+        // console.log('parent--created=====',this)
+      },
+      beforeMount() {
+        // console.log('parent--beforeMount=====',this)
+      },
+      mounted() {
+        // setTimeout(()=>{
+        //   this.name = 'sdfsfsf'
+        // },2000)
+        // console.log('this.$pluginxxx======>',this.pluginxxx)
+        // console.log('parent--mounted=====',this)
+      },
       // beforeUpdate() {
       //   console.log('parent--beforeUpdate=====',this)
       // },
@@ -150,13 +221,21 @@
       // },
       methods:{
         add() {
-          this.n = this.n.push(this.n.length+1)
+          this.n.push(num())
         },
         sub() {
           this.n.pop()
         },
+        splice() {
+          // this.n.splice(1,1)
+          this.m = this.m
+          
+          console.log('this.n',this.m)
+        },
         showChild() {
           this.isShowChild = !this.isShowChild
+          
+          // console.log('per=--------',per)
         }
         
       }

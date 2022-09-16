@@ -727,6 +727,7 @@
   };
 
   Dep.prototype.depend = function depend () {
+    // console.log('DEP.depend=========>',this)
     if (Dep.target) {
       Dep.target.addDep(this);
     }
@@ -774,6 +775,7 @@
     componentOptions,
     asyncFactory
   ) {
+    // console.log('tag============>',tag)
     this.tag = tag;
     this.data = data;
     this.children = children;
@@ -819,6 +821,7 @@
   };
 
   function createTextVNode (val) {
+    // console.log('createTextVNode=====>',val)
     return new VNode(undefined, undefined, undefined, String(val))
   }
 
@@ -827,6 +830,7 @@
   // multiple renders, cloning them avoids errors when DOM manipulations rely
   // on their elm reference.
   function cloneVNode (vnode) {
+    console.log('cloneVNode=====>',vnode)
     var cloned = new VNode(
       vnode.tag,
       vnode.data,
@@ -874,6 +878,7 @@
    * Intercept mutating methods and emit events
    */
   methodsToPatch.forEach(function (method) {
+    // debugger
     // cache original method
     var original = arrayProto[method];
     def(arrayMethods, method, function mutator () {
@@ -892,6 +897,7 @@
           inserted = args.slice(2);
           break
       }
+      // console.log('inserted==========>',args,inserted)
       if (inserted) { ob.observeArray(inserted); }
       // notify change
       ob.dep.notify();
@@ -902,6 +908,7 @@
   /*  */
 
   var arrayKeys = Object.getOwnPropertyNames(arrayMethods);
+  // console.log('arrayKeys============>',arrayKeys)
 
   /**
    * In some cases we may want to disable observation inside a component's
@@ -920,10 +927,11 @@
    * collect dependencies and dispatch updates.
    */
   var Observer = function Observer (value) {
-    debugger
+    // debugger
     this.value = value;
     this.dep = new Dep();
     this.vmCount = 0;
+    // console.log('this.vmCount===========>',this.vmCount)
     def(value, '__ob__', this);
     if (Array.isArray(value)) {
       if (hasProto) {
@@ -954,6 +962,7 @@
    */
   Observer.prototype.observeArray = function observeArray (items) {
     for (var i = 0, l = items.length; i < l; i++) {
+      // debugger
       observe(items[i]);
     }
   };
@@ -988,6 +997,7 @@
    * or the existing observer if the value already has one.
    */
   function observe (value, asRootData) {
+    // debugger
     if (!isObject(value) || value instanceof VNode) {
       return
     }
@@ -1106,6 +1116,7 @@
     }
     defineReactive$$1(ob.value, key, val);
     ob.dep.notify();
+    console.log('set=============>1115',val)
     return val
   }
 
@@ -1368,7 +1379,7 @@
     }
     return ret
   };
-
+  // console.log('strats========>',strats)
   /**
    * Other object hashes.
    */
@@ -1430,7 +1441,9 @@
    * Object-based format.
    */
   function normalizeProps (options, vm) {
+    // debugger
     var props = options.props;
+    // console.log('props==========>', props,vm)
     if (!props) { return }
     var res = {};
     var i, val, name;
@@ -1533,6 +1546,7 @@
     }
 
     normalizeProps(child, vm);
+    // console.log('mergeOptions=======>',child,vm)
     normalizeInject(child, vm);
     normalizeDirectives(child);
 
@@ -1565,6 +1579,7 @@
       var strat = strats[key] || defaultStrat;
       options[key] = strat(parent[key], child[key], vm, key);
     }
+    // console.log('options=============>',options)
     return options
   }
 
@@ -1918,6 +1933,7 @@
   var pending = false;
 
   function flushCallbacks () {
+    // debugger
     pending = false;
     var copies = callbacks.slice(0);
     callbacks.length = 0;
@@ -1947,6 +1963,7 @@
   // Promise is available, we will use it:
   /* istanbul ignore next, $flow-disable-line */
   if (typeof Promise !== 'undefined' && isNative(Promise)) {
+    // debugger
     var p = Promise.resolve();
     timerFunc = function () {
       p.then(flushCallbacks);
@@ -1992,6 +2009,7 @@
   }
 
   function nextTick (cb, ctx) {
+    // debugger
     var _resolve;
     callbacks.push(function () {
       if (cb) {
@@ -2359,6 +2377,7 @@
   // thing with Array.prototype.concat. It is guaranteed to be only 1-level deep
   // because functional components already normalize their own children.
   function simpleNormalizeChildren (children) {
+    // console.log('simpleNormalizeChildren',children)
     for (var i = 0; i < children.length; i++) {
       if (Array.isArray(children[i])) {
         return Array.prototype.concat.apply([], children)
@@ -2372,6 +2391,7 @@
   // with hand-written render functions / JSX. In such cases a full normalization
   // is needed to cater to all possible types of children values.
   function normalizeChildren (children) {
+    // console.log('normalizeChildren=========>',children)
     return isPrimitive(children)
       ? [createTextVNode(children)]
       : Array.isArray(children)
@@ -2384,6 +2404,8 @@
   }
 
   function normalizeArrayChildren (children, nestedIndex) {
+    // debugger
+    // console.log('normalizeArrayChildren=======>',children,nestedIndex)
     var res = [];
     var i, c, lastIndex, last;
     for (i = 0; i < children.length; i++) {
@@ -2428,6 +2450,7 @@
         }
       }
     }
+    // console.log('normalizeArrayChildren====ttt====>',res)
     return res
   }
 
@@ -2510,6 +2533,7 @@
     children,
     context
   ) {
+    // debugger
     if (!children || !children.length) {
       return {}
     }
@@ -2517,6 +2541,7 @@
     for (var i = 0, l = children.length; i < l; i++) {
       var child = children[i];
       var data = child.data;
+      // console.log('child======tag==>',child)
       // remove slot attribute if the node is resolved as a Vue slot node
       if (data && data.attrs && data.attrs.slot) {
         delete data.attrs.slot;
@@ -2563,6 +2588,7 @@
     normalSlots,
     prevSlots
   ) {
+    // debugger
     var res;
     var hasNormalSlots = Object.keys(normalSlots).length > 0;
     var isStable = slots ? !!slots.$stable : !hasNormalSlots;
@@ -2647,6 +2673,7 @@
     val,
     render
   ) {
+    // debugger
     var ret, i, l, keys, key;
     if (Array.isArray(val) || typeof val === 'string') {
       ret = new Array(val.length);
@@ -2694,6 +2721,7 @@
     props,
     bindObject
   ) {
+    // debugger
     var scopedSlotFn = this.$scopedSlots[name];
     var nodes;
     if (scopedSlotFn) {
@@ -2777,6 +2805,7 @@
     isSync
   ) {
     if (value) {
+      debugger
       if (!isObject(value)) {
         warn(
           'v-bind without argument expects an Object or Array value',
@@ -2829,6 +2858,7 @@
     index,
     isInFor
   ) {
+    // debugger
     var cached = this._staticTrees || (this._staticTrees = []);
     var tree = cached[index];
     // if has already-rendered static tree and not inside v-for,
@@ -2891,6 +2921,7 @@
           this
         );
       } else {
+        // debugger
         var on = data.on = data.on ? extend({}, data.on) : {};
         for (var key in value) {
           var existing = on[key];
@@ -2933,6 +2964,7 @@
   /*  */
 
   function bindDynamicKeys (baseObj, values) {
+    debugger
     for (var i = 0; i < values.length; i += 2) {
       var key = values[i];
       if (typeof key === 'string' && key) {
@@ -2986,6 +3018,7 @@
     parent,
     Ctor
   ) {
+    // debugger
     var this$1 = this;
 
     var options = Ctor.options;
@@ -3081,7 +3114,8 @@
       contextVm,
       Ctor
     );
-
+    
+    console.log('renderContext=====>',renderContext)
     var vnode = options.render.call(null, renderContext._c, renderContext);
 
     if (vnode instanceof VNode) {
@@ -3100,6 +3134,7 @@
     // #7817 clone node before setting fnContext, otherwise if the node is reused
     // (e.g. it was from a cached normal slot) the fnContext causes named slots
     // that should not be matched to match.
+    // debugger
     var clone = cloneVNode(vnode);
     clone.fnContext = contextVm;
     clone.fnOptions = options;
@@ -3134,6 +3169,7 @@
         !vnode.componentInstance._isDestroyed &&
         vnode.data.keepAlive
       ) {
+        // debugger
         // kept-alive components, treat as a patch
         var mountedNode = vnode; // work around flow
         componentVNodeHooks.prepatch(mountedNode, mountedNode);
@@ -3192,7 +3228,7 @@
   };
 
   var hooksToMerge = Object.keys(componentVNodeHooks);
-
+  // console.log('hooksToMerge',hooksToMerge)
   function createComponent (
     Ctor,
     data,
@@ -3255,6 +3291,7 @@
 
     // functional component
     if (isTrue(Ctor.options.functional)) {
+      debugger
       return createFunctionalComponent(Ctor, propsData, data, context, children)
     }
 
@@ -3278,10 +3315,13 @@
     }
 
     // install component management hooks onto the placeholder node
+    // console.log('data=>>>>>>>>>>>>',data)
     installComponentHooks(data);
 
     // return a placeholder vnode
     var name = Ctor.options.name || tag;
+    // console.log('Ctor==========>',Ctor.cid)
+    // console.log('tag======)))======>',("vue-component-" + (Ctor.cid) + (name ? ("-" + name) : '')))
     var vnode = new VNode(
       ("vue-component-" + (Ctor.cid) + (name ? ("-" + name) : '')),
       data, undefined, undefined, undefined, context,
@@ -3337,6 +3377,7 @@
   // transform component v-model info (value and callback) into
   // prop and event handler respectively.
   function transformModel (options, data) {
+    debugger
     var prop = (options.model && options.model.prop) || 'value';
     var event = (options.model && options.model.event) || 'input'
     ;(data.attrs || (data.attrs = {}))[prop] = data.model.value;
@@ -3389,6 +3430,7 @@
     children,
     normalizationType
   ) {
+    // debugger
     if (isDef(data) && isDef((data).__ob__)) {
       warn(
         "Avoid using observed data object as vnode data: " + (JSON.stringify(data)) + "\n" +
@@ -3988,6 +4030,7 @@
     };
 
     Vue.prototype.$destroy = function () {
+      // debugger
       var vm = this;
       if (vm._isBeingDestroyed) {
         return
@@ -4228,6 +4271,7 @@
   }
 
   function callHook (vm, hook) {
+    // console.log(vm,hook)
     // #7573 disable dep collection when invoking lifecycle hooks
     pushTarget();
     var handlers = vm.$options[hook];
@@ -4238,6 +4282,7 @@
       }
     }
     if (vm._hasHookEvent) {
+      console.log('vm._hasHookEvent====>',vm._hasHookEvent,vm,hook)
       vm.$emit('hook:' + hook);
     }
     popTarget();
@@ -4302,6 +4347,7 @@
    * Flush both queues and run the watchers.
    */
   function flushSchedulerQueue () {
+    // debugger
     currentFlushTimestamp = getNow();
     flushing = true;
     var watcher, id;
@@ -4380,6 +4426,7 @@
     // rely on checking whether it's in an inactive tree (e.g. router-view)
     vm._inactive = false;
     activatedChildren.push(vm);
+    // console.log('activatedChildren==========>',activatedChildren)
   }
 
   function callActivatedHooks (queue) {
@@ -4440,7 +4487,9 @@
     options,
     isRenderWatcher
   ) {
+    // debugger
     this.vm = vm;
+    // console.log('vm==========>',vm)
     if (isRenderWatcher) {
       vm._watcher = this;
     }
@@ -4515,6 +4564,8 @@
    * Add a dependency to this directive.
    */
   Watcher.prototype.addDep = function addDep (dep) {
+    // debugger
+    // console.log('dep======>',this,dep)
     var id = dep.id;
     if (!this.newDepIds.has(id)) {
       this.newDepIds.add(id);
@@ -4529,6 +4580,7 @@
    * Clean up for dependency collection.
    */
   Watcher.prototype.cleanupDeps = function cleanupDeps () {
+    // debugger
     var i = this.deps.length;
     while (i--) {
       var dep = this.deps[i];
@@ -4566,6 +4618,7 @@
    * Will be called by the scheduler.
    */
   Watcher.prototype.run = function run () {
+    // debugger
     if (this.active) {
       var value = this.get();
       if (
@@ -4594,6 +4647,7 @@
    * This only gets called for lazy watchers.
    */
   Watcher.prototype.evaluate = function evaluate () {
+    // console.log('evalute=========>',this)
     this.value = this.get();
     this.dirty = false;
   };
@@ -4612,6 +4666,7 @@
    * Remove self from all dependencies' subscriber list.
    */
   Watcher.prototype.teardown = function teardown () {
+    // debugger
     if (this.active) {
       // remove self from vm's watcher list
       // this is a somewhat expensive operation so we skip it
@@ -4815,6 +4870,7 @@
     key,
     userDef
   ) {
+    // debugger
     var shouldCache = !isServerRendering();
     if (typeof userDef === 'function') {
       sharedPropertyDefinition.get = shouldCache
@@ -4842,6 +4898,7 @@
 
   function createComputedGetter (key) {
     return function computedGetter () {
+      // debugger
       var watcher = this._computedWatchers && this._computedWatchers[key];
       if (watcher) {
         if (watcher.dirty) {
@@ -4862,6 +4919,7 @@
   }
 
   function initMethods (vm, methods) {
+    // debugger
     var props = vm.$options.props;
     for (var key in methods) {
       {
@@ -4890,6 +4948,7 @@
   }
 
   function initWatch (vm, watch) {
+    // debugger
     for (var key in watch) {
       var handler = watch[key];
       if (Array.isArray(handler)) {
@@ -4908,6 +4967,7 @@
     handler,
     options
   ) {
+    // debugger
     if (isPlainObject(handler)) {
       options = handler;
       handler = handler.handler;
@@ -4919,6 +4979,7 @@
   }
 
   function stateMixin (Vue) {
+    // debugger
     // flow somehow has problems with directly declared definition object
     // when using Object.defineProperty, so we have to procedurally build up
     // the object here.
@@ -4974,6 +5035,7 @@
 
   function initMixin (Vue) {
     Vue.prototype._init = function (options) {
+      // debugger
       var vm = this;
       // a uid
       vm._uid = uid$3++;
@@ -5030,6 +5092,7 @@
   }
 
   function initInternalComponent (vm, options) {
+    // debugger
     var opts = vm.$options = Object.create(vm.constructor.options);
     // doing this because it's faster than dynamic enumeration.
     var parentVnode = options._parentVnode;
@@ -5103,6 +5166,7 @@
 
   function initUse (Vue) {
     Vue.use = function (plugin) {
+      // debugger
       var installedPlugins = (this._installedPlugins || (this._installedPlugins = []));
       if (installedPlugins.indexOf(plugin) > -1) {
         return this
@@ -5227,17 +5291,20 @@
   function initAssetRegisters (Vue) {
     /**
      * Create asset registration methods.
+     * ASSET_TYPES ['component','directive','filter']
      */
     ASSET_TYPES.forEach(function (type) {
       Vue[type] = function (
         id,
         definition
       ) {
+        // debugger
         if (!definition) {
           return this.options[type + 's'][id]
         } else {
           /* istanbul ignore if */
           if (type === 'component') {
+            // 校验组件名是否符合H5自定义标准，非H5预留或者现有标签
             validateComponentName(id);
           }
           if (type === 'component' && isPlainObject(definition)) {
@@ -5261,10 +5328,13 @@
 
 
   function getComponentName (opts) {
+    // debugger
+    // console.log('getComponentName=======>',opts)
     return opts && (opts.Ctor.options.name || opts.tag)
   }
 
   function matches (pattern, name) {
+    // debugger
     if (Array.isArray(pattern)) {
       return pattern.indexOf(name) > -1
     } else if (typeof pattern === 'string') {
@@ -5277,6 +5347,7 @@
   }
 
   function pruneCache (keepAliveInstance, filter) {
+    debugger
     var cache = keepAliveInstance.cache;
     var keys = keepAliveInstance.keys;
     var _vnode = keepAliveInstance._vnode;
@@ -5297,6 +5368,7 @@
     keys,
     current
   ) {
+    // debugger
     var entry = cache[key];
     if (entry && (!current || entry.tag !== current.tag)) {
       entry.componentInstance.$destroy();
@@ -5319,6 +5391,8 @@
 
     methods: {
       cacheVNode: function cacheVNode() {
+        // debugger
+        console.log('=================>cacheVnode')
         var ref = this;
         var cache = ref.cache;
         var keys = ref.keys;
@@ -5355,6 +5429,7 @@
     },
 
     mounted: function mounted () {
+      // debugger
       var this$1 = this;
 
       this.cacheVNode();
@@ -5371,11 +5446,13 @@
     },
 
     render: function render () {
+      // debugger
       var slot = this.$slots.default;
       var vnode = getFirstComponentChild(slot);
       var componentOptions = vnode && vnode.componentOptions;
       if (componentOptions) {
         // check pattern
+        console.log('render===========>')
         var name = getComponentName(componentOptions);
         var ref = this;
         var include = ref.include;
@@ -5475,7 +5552,7 @@
   Object.defineProperty(Vue.prototype, '$isServer', {
     get: isServerRendering
   });
-
+  console.log(new Vue(),'vue=============>')
   Object.defineProperty(Vue.prototype, '$ssrContext', {
     get: function get () {
       /* istanbul ignore next */
@@ -5653,6 +5730,7 @@
     'polygon,polyline,rect,switch,symbol,text,textpath,tspan,use,view',
     true
   );
+  // HTMLFormControlsCollection.log('isSVG')
 
   var isPreTag = function (tag) { return tag === 'pre'; };
 
@@ -5810,6 +5888,7 @@
   };
 
   function registerRef (vnode, isRemoval) {
+    // debugger
     var key = vnode.data.ref;
     if (!isDef(key)) { return }
 
@@ -5853,6 +5932,7 @@
   var hooks = ['create', 'activate', 'update', 'remove', 'destroy'];
 
   function sameVnode (a, b) {
+    // debugger
     return (
       a.key === b.key &&
       a.asyncFactory === b.asyncFactory && (
@@ -5878,6 +5958,7 @@
   }
 
   function createKeyToOldIdx (children, beginIdx, endIdx) {
+    // debugger
     var i, key;
     var map = {};
     for (i = beginIdx; i <= endIdx; ++i) {
@@ -5952,7 +6033,9 @@
       ownerArray,
       index
     ) {
+      // debugger 
       if (isDef(vnode.elm) && isDef(ownerArray)) {
+        debugger
         // This vnode was used in a previous render!
         // now it's used as a new node, overwriting its elm would cause
         // potential patch errors down the road when it's used as an insertion
@@ -6005,6 +6088,7 @@
         vnode.elm = nodeOps.createComment(vnode.text);
         insert(parentElm, vnode.elm, refElm);
       } else {
+        // debugger
         vnode.elm = nodeOps.createTextNode(vnode.text);
         insert(parentElm, vnode.elm, refElm);
       }
@@ -6085,6 +6169,7 @@
     }
 
     function createChildren (vnode, children, insertedVnodeQueue) {
+      // debugger
       if (Array.isArray(children)) {
         {
           checkDuplicateKeys(children);
@@ -6397,6 +6482,7 @@
 
     // Note: this is a browser-only function so we can assume elms are DOM nodes.
     function hydrate (elm, vnode, insertedVnodeQueue, inVPre) {
+      debugger
       var i;
       var tag = vnode.tag;
       var data = vnode.data;

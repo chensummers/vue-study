@@ -113,6 +113,33 @@ function remove$2(arr, item) {
         }
     }
 }
+
+var _Set;
+  /* istanbul ignore if */ // $flow-disable-line
+  if (typeof Set !== 'undefined' && isNative(Set)) {
+    // use native Set when available.
+    _Set = Set;
+  } else {
+    // a non-standard Set polyfill that only works with primitive keys.
+    _Set = /*@__PURE__*/(function () {
+      function Set () {
+        this.set = Object.create(null);
+      }
+      Set.prototype.has = function has (key) {
+        return this.set[key] === true
+      };
+      Set.prototype.add = function add (key) {
+        this.set[key] = true;
+      };
+      Set.prototype.clear = function clear () {
+        this.set = Object.create(null);
+      };
+
+      return Set;
+    }());
+  }
+
+
 /**
  * Check whether an object has the property.
  */
@@ -318,3 +345,196 @@ function hasChanged(x, y) {
         configurable: true
     });
 }
+
+/**
+ * Set a property on an object. Adds the new property and
+ * triggers change notification if the property doesn't
+ * already exist.
+ */
+function set (target, key, val) {
+    if (isUndef(target) || isPrimitive(target)
+    ) {
+      warn(("Cannot set reactive property on undefined, null, or primitive value: " + ((target))));
+    }
+    if (Array.isArray(target) && isValidArrayIndex(key)) {
+      target.length = Math.max(target.length, key);
+      target.splice(key, 1, val);
+      return val
+    }
+    if (key in target && !(key in Object.prototype)) {
+      target[key] = val;
+      return val
+    }
+    var ob = (target).__ob__;
+    if (target._isVue || (ob && ob.vmCount)) {
+      warn(
+        'Avoid adding reactive properties to a Vue instance or its root $data ' +
+        'at runtime - declare it upfront in the data option.'
+      );
+      return val
+    }
+    if (!ob) {
+      target[key] = val;
+      return val
+    }
+    defineReactive$$1(ob.value, key, val);
+    ob.dep.notify();
+    return val
+  }
+
+
+  /**
+   * Delete a property and trigger change if necessary.
+   */
+   function del (target, key) {
+    if (isUndef(target) || isPrimitive(target)
+    ) {
+      warn(("Cannot delete reactive property on undefined, null, or primitive value: " + ((target))));
+    }
+    if (Array.isArray(target) && isValidArrayIndex(key)) {
+      target.splice(key, 1);
+      return
+    }
+    var ob = (target).__ob__;
+    if (target._isVue || (ob && ob.vmCount)) {
+      warn(
+        'Avoid deleting properties on a Vue instance or its root $data ' +
+        '- just set it to null.'
+      );
+      return
+    }
+    if (!hasOwn(target, key)) {
+      return
+    }
+    delete target[key];
+    if (!ob) {
+      return
+    }
+    ob.dep.notify();
+  }
+
+  /**
+   * Collect dependencies on array elements when the array is touched, since
+   * we cannot intercept array element access like property getters.
+   */
+   function dependArray (value) {
+    for (var e = (void 0), i = 0, l = value.length; i < l; i++) {
+      e = value[i];
+      e && e.__ob__ && e.__ob__.dep.depend();
+      if (Array.isArray(e)) {
+        dependArray(e);
+      }
+    }
+  }
+
+  
+  function installRenderHelpers (target) {
+    target._o = markOnce;
+    target._n = toNumber;
+    target._s = toString;
+    target._l = renderList;
+    target._t = renderSlot;
+    target._q = looseEqual;
+    target._i = looseIndexOf;
+    target._m = renderStatic;
+    target._f = resolveFilter;
+    target._k = checkKeyCodes;
+    target._b = bindObjectProps;
+    target._v = createTextVNode;
+    target._e = createEmptyVNode;
+    target._u = resolveScopedSlots;
+    target._g = bindObjectListeners;
+    target._d = bindDynamicKeys;
+    target._p = prependModifier;
+  }
+
+
+  function traverse (val) {
+    _traverse(val, seenObjects);
+    seenObjects.clear();
+  }
+
+  function _traverse (val, seen) {
+    var i, keys;
+    var isA = Array.isArray(val);
+    if ((!isA && !isObject(val)) || Object.isFrozen(val) || val instanceof VNode) {
+      return
+    }
+    if (val.__ob__) {
+      var depId = val.__ob__.dep.id;
+      if (seen.has(depId)) {
+        return
+      }
+      seen.add(depId);
+    }
+    if (isA) {
+      i = val.length;
+      while (i--) { _traverse(val[i], seen); }
+    } else {
+      keys = Object.keys(val);
+      i = keys.length;
+      while (i--) { _traverse(val[keys[i]], seen); }
+    }
+  }
+
+
+  /* istanbul ignore next */
+  function polyfillBind (fn, ctx) {
+    function boundFn (a) {
+      var l = arguments.length;
+      return l
+        ? l > 1
+          ? fn.apply(ctx, arguments)
+          : fn.call(ctx, a)
+        : fn.call(ctx)
+    }
+
+    boundFn._length = fn.length;
+    return boundFn
+  }
+
+  function nativeBind (fn, ctx) {
+    return fn.bind(ctx)
+  }
+
+  var bind = Function.prototype.bind
+    ? nativeBind
+    : polyfillBind;
+
+
+    function stringifyClass (value) {
+      if (Array.isArray(value)) {
+        return stringifyArray(value)
+      }
+      if (isObject(value)) {
+        return stringifyObject(value)
+      }
+      if (typeof value === 'string') {
+        return value
+      }
+      /* istanbul ignore next */
+      return ''
+    }
+  
+    function stringifyArray (value) {
+      var res = '';
+      var stringified;
+      for (var i = 0, l = value.length; i < l; i++) {
+        if (isDef(stringified = stringifyClass(value[i])) && stringified !== '') {
+          if (res) { res += ' '; }
+          res += stringified;
+        }
+      }
+      return res
+    }
+  
+    function stringifyObject (value) {
+      var res = '';
+      for (var key in value) {
+        if (value[key]) {
+          if (res) { res += ' '; }
+          res += key;
+        }
+      }
+      return res
+    }
