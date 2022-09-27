@@ -17,7 +17,7 @@
   </style>
 </head>
 <body>
-  <div id="app">
+  <div id="app" :class="">
     <!-- <keep-alive max="2" include="my-component,my-component-a,my-component-b">
       <my-component v-if="isShowChild" ref="myCom">
         <template #t>
@@ -26,10 +26,10 @@
         <div>this is default slot</div>
       </my-component>
       <component :is="name"></component>
-    </keep-alive>
-    <div ref="nameRef">{{name}}=========>{{m}}===f{{f}}</div>
-    <div>{{mixin}}</div> -->
-    <div :class="['wrap',{actived:isShow}]">
+    </keep-alive> -->
+    <!-- <div ref="nameRef">{{name}}=========>{{m}}===f{{f}}</div> -->
+    <span>{{name}}</span>
+    <!-- <div :class="['wrap',{actived:isShow}]" >
       <div class="wrap-n">
         <span class="span" v-for="i in n" :key="i" >{{i}}</span>
       </div>
@@ -37,7 +37,7 @@
       <button @click="sub" v-once>sub</button>
       <button @click="splice" v-once>splice</button>
       <button @click="showChild" v-once>显示/隐藏</button>
-    </div>
+    </div> -->
     <!-- <input v-model="name"/> -->
     <!-- <button @click="name = 'my-component' ">my-component</button>
     <button @click="name = 'my-component-a' ">my-component-a</button>
@@ -147,8 +147,8 @@
       data() {
         return {
           name: 'my-component',
-          // n: [num(),num(),num()],
-          n: [2,3,4],
+          n: [num(),num(),num()],
+          // n: [2,3,4],
           isShowChild: true,
           isShow: true
         }
@@ -227,8 +227,8 @@
           this.n.pop()
         },
         splice() {
-          // this.n.splice(1,1)
-          this.m = this.m
+          this.n.splice(1,1)
+          // this.m = this.m
           
           console.log('this.n',this.m)
         },

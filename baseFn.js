@@ -92,6 +92,7 @@ function makeMap(str, expectsLowerCase) {
     for (var i = 0; i < list.length; i++) {
         map[list[i]] = true;
     }
+    console.log('str',str)
     return expectsLowerCase ? function (val) { return map[val.toLowerCase()]; } : function (val) { return map[val]; };
 }
 /**

@@ -123,6 +123,7 @@
     for (var i = 0; i < list.length; i++) {
       map[list[i]] = true;
     }
+    // console.log('str',map)
     return expectsLowerCase
       ? function (val) { return map[val.toLowerCase()]; }
       : function (val) { return map[val]; }
@@ -2805,7 +2806,7 @@
     isSync
   ) {
     if (value) {
-      debugger
+      // debugger
       if (!isObject(value)) {
         warn(
           'v-bind without argument expects an Object or Array value',
@@ -2964,7 +2965,7 @@
   /*  */
 
   function bindDynamicKeys (baseObj, values) {
-    debugger
+    // debugger
     for (var i = 0; i < values.length; i += 2) {
       var key = values[i];
       if (typeof key === 'string' && key) {
@@ -3291,7 +3292,7 @@
 
     // functional component
     if (isTrue(Ctor.options.functional)) {
-      debugger
+      // debugger
       return createFunctionalComponent(Ctor, propsData, data, context, children)
     }
 
@@ -3377,7 +3378,7 @@
   // transform component v-model info (value and callback) into
   // prop and event handler respectively.
   function transformModel (options, data) {
-    debugger
+    // debugger
     var prop = (options.model && options.model.prop) || 'value';
     var event = (options.model && options.model.event) || 'input'
     ;(data.attrs || (data.attrs = {}))[prop] = data.model.value;
@@ -5148,7 +5149,9 @@
     return modified
   }
 
+  // init Vue bind prototype (initVue.js)
   function Vue (options) {
+    console.log('1===Vue',this,options)
     if (!(this instanceof Vue)
     ) {
       warn('Vue is a constructor and should be called with the `new` keyword');
@@ -5345,9 +5348,9 @@
     /* istanbul ignore next */
     return false
   }
-
+  // 删减cache
   function pruneCache (keepAliveInstance, filter) {
-    debugger
+    // debugger
     var cache = keepAliveInstance.cache;
     var keys = keepAliveInstance.keys;
     var _vnode = keepAliveInstance._vnode;
@@ -5392,7 +5395,7 @@
     methods: {
       cacheVNode: function cacheVNode() {
         // debugger
-        console.log('=================>cacheVnode')
+        // console.log('=================>cacheVnode')
         var ref = this;
         var cache = ref.cache;
         var keys = ref.keys;
@@ -5452,7 +5455,7 @@
       var componentOptions = vnode && vnode.componentOptions;
       if (componentOptions) {
         // check pattern
-        console.log('render===========>')
+        // console.log('render===========>')
         var name = getComponentName(componentOptions);
         var ref = this;
         var include = ref.include;
@@ -5552,7 +5555,7 @@
   Object.defineProperty(Vue.prototype, '$isServer', {
     get: isServerRendering
   });
-  console.log(new Vue(),'vue=============>')
+  // console.log(new Vue(),'vue=============>')
   Object.defineProperty(Vue.prototype, '$ssrContext', {
     get: function get () {
       /* istanbul ignore next */
@@ -5950,6 +5953,7 @@
   }
 
   function sameInputType (a, b) {
+    // debugger
     if (a.tag !== 'input') { return true }
     var i;
     var typeA = isDef(i = a.data) && isDef(i = i.attrs) && i.type;
@@ -6033,9 +6037,9 @@
       ownerArray,
       index
     ) {
-      // debugger 
+      // debugger
       if (isDef(vnode.elm) && isDef(ownerArray)) {
-        debugger
+        // debugger
         // This vnode was used in a previous render!
         // now it's used as a new node, overwriting its elm would cause
         // potential patch errors down the road when it's used as an insertion
@@ -6168,6 +6172,7 @@
       }
     }
 
+    // 插入文本节点或者递归新建节点
     function createChildren (vnode, children, insertedVnodeQueue) {
       // debugger
       if (Array.isArray(children)) {
@@ -6231,8 +6236,8 @@
         createElm(vnodes[startIdx], insertedVnodeQueue, parentElm, refElm, false, vnodes, startIdx);
       }
     }
-
     function invokeDestroyHook (vnode) {
+      // debugger
       var i, j;
       var data = vnode.data;
       if (isDef(data)) {
@@ -6247,6 +6252,7 @@
     }
   /***************6248*******************/ 
     function removeVnodes (vnodes, startIdx, endIdx) {
+      // debugger
       for (; startIdx <= endIdx; ++startIdx) {
         var ch = vnodes[startIdx];
         if (isDef(ch)) {
@@ -6261,6 +6267,7 @@
     }
 
     function removeAndInvokeRemoveHook (vnode, rm) {
+      // debugger
       if (isDef(rm) || isDef(vnode.data)) {
         var i;
         var listeners = cbs.remove.length + 1;
@@ -6288,8 +6295,9 @@
         removeNode(vnode.elm);
       }
     }
-
+    
     function updateChildren (parentElm, oldCh, newCh, insertedVnodeQueue, removeOnly) {
+      // debugger
       var oldStartIdx = 0;
       var newStartIdx = 0;
       var oldEndIdx = oldCh.length - 1;
@@ -6306,19 +6314,22 @@
       var canMove = !removeOnly;
 
       {
+        // 检测children key是否重复
         checkDuplicateKeys(newCh);
       }
 
       while (oldStartIdx <= oldEndIdx && newStartIdx <= newEndIdx) {
+        
         if (isUndef(oldStartVnode)) {
-          oldStartVnode = oldCh[++oldStartIdx]; // Vnode has been moved left
+          oldStartVnode = oldCh[++oldStartIdx]; // Vnode has been moved left ，从旧节点头部移除
         } else if (isUndef(oldEndVnode)) {
-          oldEndVnode = oldCh[--oldEndIdx];
-        } else if (sameVnode(oldStartVnode, newStartVnode)) {
+          oldEndVnode = oldCh[--oldEndIdx]; // 从旧节点尾部移除
+        } else if (sameVnode(oldStartVnode, newStartVnode)) { // 新旧节点头部相同
           patchVnode(oldStartVnode, newStartVnode, insertedVnodeQueue, newCh, newStartIdx);
           oldStartVnode = oldCh[++oldStartIdx];
           newStartVnode = newCh[++newStartIdx];
-        } else if (sameVnode(oldEndVnode, newEndVnode)) {
+          
+        } else if (sameVnode(oldEndVnode, newEndVnode)) { // 新旧节点尾部相同
           patchVnode(oldEndVnode, newEndVnode, insertedVnodeQueue, newCh, newEndIdx);
           oldEndVnode = oldCh[--oldEndIdx];
           newEndVnode = newCh[--newEndIdx];
@@ -6394,6 +6405,7 @@
       index,
       removeOnly
     ) {
+      // debugger
       if (oldVnode === vnode) {
         return
       }
@@ -6482,7 +6494,7 @@
 
     // Note: this is a browser-only function so we can assume elms are DOM nodes.
     function hydrate (elm, vnode, insertedVnodeQueue, inVPre) {
-      debugger
+      // debugger
       var i;
       var tag = vnode.tag;
       var data = vnode.data;
@@ -6587,6 +6599,7 @@
     }
 
     return function patch (oldVnode, vnode, hydrating, removeOnly) {
+      // debugger
       if (isUndef(vnode)) {
         if (isDef(oldVnode)) { invokeDestroyHook(oldVnode); }
         return
@@ -6600,6 +6613,7 @@
         isInitialPatch = true;
         createElm(vnode, insertedVnodeQueue);
       } else {
+        
         var isRealElement = isDef(oldVnode.nodeType);
         if (!isRealElement && sameVnode(oldVnode, vnode)) {
           // patch existing root node
@@ -7442,6 +7456,7 @@
     dir,
     _warn
   ) {
+    // debugger
     warn$1 = _warn;
     var value = dir.value;
     var modifiers = dir.modifiers;
@@ -7849,6 +7864,7 @@
 
   // merge static and dynamic style data on the same vnode
   function normalizeStyleData (data) {
+    // debugger
     var style = normalizeStyleBinding(data.style);
     // static style is pre-processed into an object during compilation
     // and is always a fresh object, so it's safe to merge into it
@@ -9178,6 +9194,7 @@
   // devtools global hook
   /* istanbul ignore next */
   if (inBrowser) {
+    // console.log('$mount============',config)
     setTimeout(function () {
       if (config.devtools) {
         if (devtools) {
@@ -9283,6 +9300,7 @@
     if (el.classBinding) {
       data += "class:" + (el.classBinding) + ",";
     }
+    // console.log('data======',data)
     return data
   }
 
@@ -9371,7 +9389,6 @@
     'optgroup,option,param,rp,rt,source,style,summary,tbody,td,tfoot,th,thead,' +
     'title,tr,track'
   );
-
   /**
    * Not type-checking this file because it's mostly vendor code.
    */
@@ -9421,6 +9438,7 @@
     var canBeLeftOpenTag$$1 = options.canBeLeftOpenTag || no;
     var index = 0;
     var last, lastTag;
+    // debugger
     while (html) {
       last = html;
       // Make sure we're not in a plaintext content element like script/style
@@ -10045,6 +10063,7 @@
         }
       }
     });
+    // console.log('root',root)
     return root
   }
 
@@ -11052,9 +11071,10 @@
 
 
 
-
+// 编译器
   var CodegenState = function CodegenState (options) {
     this.options = options;
+    console.log(this,'option',options)
     this.warn = options.warn || baseWarn;
     this.transforms = pluckModuleFunction(options.modules, 'transformCode');
     this.dataGenFns = pluckModuleFunction(options.modules, 'genData');
@@ -11067,7 +11087,7 @@
   };
 
 
-
+  // 生成state
   function generate (
     ast,
     options
@@ -11075,6 +11095,7 @@
     var state = new CodegenState(options);
     // fix #11483, Root level <script> tags should not be rendered.
     var code = ast ? (ast.tag === 'script' ? 'null' : genElement(ast, state)) : '_c("div")';
+    console.log(state,ast,'state')
     return {
       render: ("with(this){return " + code + "}"),
       staticRenderFns: state.staticRenderFns
@@ -11116,6 +11137,7 @@
       for (var i = 0; i < state.transforms.length; i++) {
         code = state.transforms[i](el, code);
       }
+      // console.log('code',code)
       return code
     }
   }
@@ -11779,7 +11801,7 @@
   /*  */
 
 
-
+// code => fn
   function createFunction (code, errors) {
     try {
       return new Function(code)
@@ -11789,6 +11811,7 @@
     }
   }
 
+  // [arguments] compile  fn
   function createCompileToFunctionFn (compile) {
     var cache = Object.create(null);
 
@@ -11865,6 +11888,7 @@
       res.staticRenderFns = compiled.staticRenderFns.map(function (code) {
         return createFunction(code, fnGenErrors)
       });
+      // console.log('res',res,compiled)
 
       // check function generation errors.
       // this should only happen if there is a bug in the compiler itself.
@@ -11975,6 +11999,7 @@
       optimize(ast, options);
     }
     var code = generate(ast, options);
+    console.log('ast=',ast)
     return {
       ast: ast,
       render: code.render,
@@ -11984,6 +12009,7 @@
 
   /*  */
 
+  // console.log('baseOptions',baseOptions)
   var ref$1 = createCompiler(baseOptions);
   var compile = ref$1.compile;
   var compileToFunctions = ref$1.compileToFunctions;
@@ -12007,6 +12033,7 @@
 
   var idToTemplate = cached(function (id) {
     var el = query(id);
+    
     return el && el.innerHTML
   });
 
@@ -12016,7 +12043,7 @@
     hydrating
   ) {
     el = el && query(el);
-
+    console.log('el====',el,this)
     /* istanbul ignore if */
     if (el === document.body || el === document.documentElement) {
       warn(
@@ -12027,6 +12054,7 @@
 
     var options = this.$options;
     // resolve template/el and convert to render function
+    // debugger
     if (!options.render) {
       var template = options.template;
       if (template) {

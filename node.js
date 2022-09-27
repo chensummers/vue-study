@@ -74,6 +74,18 @@ function setStyleScope (node, scopeId) {
   node.setAttribute(scopeId, '');
 }
 
+function insert (parent, elm, ref$$1) {
+  if (isDef(parent)) {
+    if (isDef(ref$$1)) {
+      if (nodeOps.parentNode(ref$$1) === parent) {
+        nodeOps.insertBefore(parent, elm, ref$$1);
+      }
+    } else {
+      nodeOps.appendChild(parent, elm);
+    }
+  }
+}
+
 var nodeOps = /*#__PURE__*/Object.freeze({
   createElement: createElement$1,
   createElementNS: createElementNS,
