@@ -28,7 +28,8 @@
       <component :is="name"></component>
     </keep-alive> -->
     <!-- <div ref="nameRef">{{name}}=========>{{m}}===f{{f}}</div> -->
-    <span>{{name}}</span>
+    <span>{{name}}---{{f}}</span>
+    <span>sdsddd</span>
     <!-- <div :class="['wrap',{actived:isShow}]" >
       <div class="wrap-n">
         <span class="span" v-for="i in n" :key="i" >{{i}}</span>
@@ -43,7 +44,7 @@
     <button @click="name = 'my-component-a' ">my-component-a</button>
     <button @click="name = 'my-component-b' ">my-component-b</button> -->
   </div>
-  <script>
+  <!-- <script>
     // const per = window.performance
     // console.log('per==========>',per)
     // import {ref} from 'vue'
@@ -97,8 +98,8 @@
     //       <my-component-s><div>my-component-s1</div></my-component-s>
     //       <my-component-s><div>my-component-s1</div></my-component-s>
     //       <child-com></child-com>
-  </script>
-  <script>
+  </script> -->
+  <!-- <script>
     function pluginxxx() {
       return {
         api(a) {
@@ -127,7 +128,7 @@
         // console.log('mixin====flux========>mounted')
       },
     }
-  </script>
+  </script> -->
   <script>
     const num = ()=> Math.ceil(Math.random()*1000+2)
     const vue = new Vue({
@@ -143,7 +144,7 @@
           a:23
         }
       },
-      mixins: [mixin],
+      // mixins: [mixin],
       data() {
         return {
           name: 'my-component',
@@ -157,27 +158,19 @@
         f(){
           return this.n.length *2
         },
-        m:{
-          get() {
-            return this.n.length
-          },
-          set(v) {
-            console.log(v,'v-----')
-          }
-        }
       },
-      watch: {
-        name:{
-          handler(n,o) {
+      // watch: {
+      //   name:{
+      //     handler(n,o) {
 
-            // console.log('this is watcher',this.name,)
-          },
-          immediate: true
-        },
-        n(n,o) {
-          console.log('watch--------n',n)
-        }
-      },
+      //       // console.log('this is watcher',this.name,)
+      //     },
+      //     immediate: true
+      //   },
+      //   n(n,o) {
+      //     console.log('watch--------n',n)
+      //   }
+      // },
       beforeCreate() {
         // console.log('parent--beforeCreate=====',this)
       },
@@ -186,14 +179,14 @@
         // console.log('parent--created=====',this)
       },
       beforeMount() {
-        // console.log('parent--beforeMount=====',this)
+        console.log('parent--beforeMount=====',this)
       },
       mounted() {
         // setTimeout(()=>{
         //   this.name = 'sdfsfsf'
         // },2000)
         // console.log('this.$pluginxxx======>',this.pluginxxx)
-        // console.log('parent--mounted=====',this)
+        console.log('parent--mounted=====',this)
       },
       // beforeUpdate() {
       //   console.log('parent--beforeUpdate=====',this)
@@ -301,24 +294,8 @@
         origin: str
       }
     }
-    let obj1 = chartStr('nqsdfsdfaaadsdwwqeeqwssd')
-    let obj2 = characte('nqsdfsdfaaadsdwwqeeqwssd')
-    // console.log(obj1,obj2)
-    // nodeName 元素节点 [DIV,SPAN,BUTTON]  文本节点时返回 '#text'
-                
-    const NODE_TYPE = {
-      1:'ELEMENT_NODE', // 一个 元素 节点，例如 <p> 和 <div>。
-      2:'ATTRIBUTE_NODE', // 元素 的耦合 属性。
-      3:'TEXT_NODE', // Element 或者 Attr 中实际的 文字
-      4:'CDATA_SECTION_NODE',// 一个 CDATASection，例如 <!CDATA[[ … ]]>。
-      5:'',// 
-      6:'',// 
-      7:'PROCESSING_INSTRUCTION_NODE',// 一个用于 XML 文档的 ProcessingInstruction (en-US) ，例如 <?xml-stylesheet ... ?> 声明。
-      8:'COMMENT_NODE',// 一个 Comment 节点。
-      9:'DOCUMENT_NODE',// 一个 Document 节点。
-      10:'DOCUMENT_TYPE_NODE',// 描述文档类型的 DocumentType 节点。例如 <!DOCTYPE html> 就是用于 HTML5 的。
-      11:'DOCUMENT_FRAGMENT_NODE',// 一个 DocumentFragment 节点
-    }
+    // let obj1 = chartStr('nqsdfsdfaaadsdwwqeeqwssd')
+    // let obj2 = characte('nqsdfsdfaaadsdwwqeeqwssd')
   </script>
 </body>
 </html>

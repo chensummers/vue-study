@@ -728,6 +728,7 @@
   };
 
   Dep.prototype.depend = function depend () {
+    debugger
     // console.log('DEP.depend=========>',this)
     if (Dep.target) {
       Dep.target.addDep(this);
@@ -1030,6 +1031,7 @@
     customSetter,
     shallow
   ) {
+    debugger
     var dep = new Dep();
 
     var property = Object.getOwnPropertyDescriptor(obj, key);
@@ -1293,6 +1295,7 @@
     parentVal,
     childVal
   ) {
+    // debugger
     var res = childVal
       ? parentVal
         ? parentVal.concat(childVal)
@@ -1538,6 +1541,7 @@
     child,
     vm
   ) {
+    // debugger
     {
       checkComponents(child);
     }
@@ -3582,6 +3586,7 @@
   var currentRenderingInstance = null;
 
   function renderMixin (Vue) {
+    debugger
     // install runtime convenience helpers
     installRenderHelpers(Vue.prototype);
 
@@ -3860,6 +3865,7 @@
   }
 
   function eventsMixin (Vue) {
+    debugger
     var hookRE = /^hook:/;
     Vue.prototype.$on = function (event, fn) {
       var vm = this;
@@ -3992,6 +3998,7 @@
   }
 
   function lifecycleMixin (Vue) {
+    debugger
     Vue.prototype._update = function (vnode, hydrating) {
       var vm = this;
       var prevEl = vm.$el;
@@ -4080,6 +4087,7 @@
     el,
     hydrating
   ) {
+    debugger
     vm.$el = el;
     if (!vm.$options.render) {
       vm.$options.render = createEmptyVNode;
@@ -4133,6 +4141,7 @@
     // component's mounted hook), which relies on vm._watcher being already defined
     new Watcher(vm, updateComponent, noop, {
       before: function before () {
+        // 在hook:mounted之后，hook:destoryed之前触发hook:beforeUpdate
         if (vm._isMounted && !vm._isDestroyed) {
           callHook(vm, 'beforeUpdate');
         }
@@ -4144,7 +4153,7 @@
     // mounted is called for render-created child components in its inserted hook
     if (vm.$vnode == null) {
       vm._isMounted = true;
-      callHook(vm, 'mounted');
+      // callHook(vm, 'mounted');
     }
     return vm
   }
@@ -4368,6 +4377,7 @@
     for (index = 0; index < queue.length; index++) {
       watcher = queue[index];
       if (watcher.before) {
+        // watcher改变时，执行[hook:beforeUpdate]
         watcher.before();
       }
       id = watcher.id;
@@ -4488,7 +4498,7 @@
     options,
     isRenderWatcher
   ) {
-    // debugger
+    debugger
     this.vm = vm;
     // console.log('vm==========>',vm)
     if (isRenderWatcher) {
@@ -4538,11 +4548,13 @@
    * Evaluate the getter, and re-collect dependencies.
    */
   Watcher.prototype.get = function get () {
+    debugger
     pushTarget(this);
     var value;
     var vm = this.vm;
     try {
       value = this.getter.call(vm, vm);
+      // value = 111;
     } catch (e) {
       if (this.user) {
         handleError(e, vm, ("getter for watcher \"" + (this.expression) + "\""));
@@ -4565,7 +4577,7 @@
    * Add a dependency to this directive.
    */
   Watcher.prototype.addDep = function addDep (dep) {
-    // debugger
+    debugger
     // console.log('dep======>',this,dep)
     var id = dep.id;
     if (!this.newDepIds.has(id)) {
@@ -4579,9 +4591,10 @@
 
   /**
    * Clean up for dependency collection.
+   * clean up [newDepIds] [newDeps]
    */
   Watcher.prototype.cleanupDeps = function cleanupDeps () {
-    // debugger
+    debugger
     var i = this.deps.length;
     while (i--) {
       var dep = this.deps[i];
@@ -4604,6 +4617,7 @@
    * Will be called when a dependency changes.
    */
   Watcher.prototype.update = function update () {
+    debugger
     /* istanbul ignore else */
     if (this.lazy) {
       this.dirty = true;
@@ -4619,7 +4633,7 @@
    * Will be called by the scheduler.
    */
   Watcher.prototype.run = function run () {
-    // debugger
+    debugger
     if (this.active) {
       var value = this.get();
       if (
@@ -4703,6 +4717,7 @@
   }
 
   function initState (vm) {
+    debugger
     vm._watchers = [];
     var opts = vm.$options;
     if (opts.props) { initProps(vm, opts.props); }
@@ -4712,7 +4727,11 @@
     } else {
       observe(vm._data = {}, true /* asRootData */);
     }
-    if (opts.computed) { initComputed(vm, opts.computed); }
+    // computed添加到watchers
+    if (opts.computed) { 
+      initComputed(vm, opts.computed);
+    }
+    // 将watch添加到watchers
     if (opts.watch && opts.watch !== nativeWatch) {
       initWatch(vm, opts.watch);
     }
@@ -4779,6 +4798,7 @@
         vm
       );
     }
+    // 检测datali 是否有 props,methods的key
     // proxy data on instance
     var keys = Object.keys(data);
     var props = vm.$options.props;
@@ -4949,7 +4969,7 @@
   }
 
   function initWatch (vm, watch) {
-    // debugger
+    debugger
     for (var key in watch) {
       var handler = watch[key];
       if (Array.isArray(handler)) {
@@ -4968,7 +4988,7 @@
     handler,
     options
   ) {
-    // debugger
+    debugger
     if (isPlainObject(handler)) {
       options = handler;
       handler = handler.handler;
@@ -4980,6 +5000,7 @@
   }
 
   function stateMixin (Vue) {
+    debugger
     // debugger
     // flow somehow has problems with directly declared definition object
     // when using Object.defineProperty, so we have to procedurally build up
@@ -5011,6 +5032,7 @@
       cb,
       options
     ) {
+      debugger
       var vm = this;
       if (isPlainObject(cb)) {
         return createWatcher(vm, expOrFn, cb, options)
@@ -5035,8 +5057,9 @@
   var uid$3 = 0;
 
   function initMixin (Vue) {
+    debugger
     Vue.prototype._init = function (options) {
-      // debugger
+      debugger
       var vm = this;
       // a uid
       vm._uid = uid$3++;
@@ -5066,17 +5089,49 @@
       }
       /* istanbul ignore else */
       {
+        // 添加 _renderProxy
         initProxy(vm);
       }
       // expose real self
       vm._self = vm;
-      initLifecycle(vm);
+      /**
+       * 初始化函数调用之前vm 添加的属性
+       * _uid,_isVue,_self
+       * 
+       * */ 
+      /**
+       * initLifecycle
+       * vm.$parent = parent;
+       *vm.$root = parent ? parent.$root : vm;
+       *vm.$children = [];
+       *vm.$refs = {};
+       *vm._watcher = null;
+       *vm._inactive = null;
+       *vm._directInactive = false;
+       *vm._isMounted = false;
+       *vm._isDestroyed = false;
+       *vm._isBeingDestroyed = false;
+       * */ 
+      // initLifecycle(vm);
+      // initEvents 添加 _events,_hasHookEvent
+      // 如果父组件存在listener,则更新子组件listensers => updateComponentListeners(vm, listeners);
       initEvents(vm);
+      //initRender 添加 _vnode,_staticTrees,$vnode,$slots,$scopedSlots
+      // 添加（createElement 创建element方法）_c,$createElement
+      // 添加 $attrs $listeners
       initRender(vm);
+      // hook==beforeCreate 执行hook
       callHook(vm, 'beforeCreate');
+      // inject注入
       initInjections(vm); // resolve injections before data/props
+      // initState 初始化initProps(props),initMethods(methods),initData(data)
+      // 初始化data时，劫持data=> observe
+      // initWatch=>添加watchers
+      // 新增_data,_props,
       initState(vm);
+      // 添加_provided
       initProvide(vm); // resolve provide after data/props
+      // hook==created 执行hook
       callHook(vm, 'created');
 
       /* istanbul ignore if */
@@ -5113,6 +5168,7 @@
   }
 
   function resolveConstructorOptions (Ctor) {
+    // debugger
     var options = Ctor.options;
     if (Ctor.super) {
       var superOptions = resolveConstructorOptions(Ctor.super);
@@ -5148,10 +5204,10 @@
     }
     return modified
   }
-
+  // debugger
   // init Vue bind prototype (initVue.js)
   function Vue (options) {
-    console.log('1===Vue',this,options)
+    console.log('Vue (options)=====')
     if (!(this instanceof Vue)
     ) {
       warn('Vue is a constructor and should be called with the `new` keyword');
@@ -5159,10 +5215,36 @@
     this._init(options);
   }
 
+  /**
+   * initMixin ===> _init()
+   * _uid,,_vue,_self,$parent,$root,$children,$$refs,$_watch
+   * _inactive,_directInactive,_isMounted,_isDestroyed,_isBeingDestroyed,
+   * $attrs,$listeners,_data,_props,_provided,
+   * inject,provide
+   * 添加hook[beforeCreate,created,]
+   * 执行vm.$mount
+   * 
+   * 执行的方法
+   * initEvents(vm)
+   * initRender(vm)
+   * callHook(vm, 'beforeCreate')
+   * initInjections(vm)
+   * initState(vm) 会劫持data =>observe(data)
+   * * initState
+   * * initWatch>createWatcher>vm.$watch[stateMixin[[$watch]]]>new Watcher
+   * *
+   * initProvide(vm)
+   * callHook(vm, 'created')
+   * 
+   * */ 
   initMixin(Vue);
+  // $props,$data,$set,$delete,$watch
   stateMixin(Vue);
+  // 在Vue上挂载方法 $on,$once,$off,$emit
   eventsMixin(Vue);
+  // 在Vue上挂载方法 _update,$forceUpdate,$destory
   lifecycleMixin(Vue);
+  // 在Vue上挂载方法 $nextTick,_render
   renderMixin(Vue);
 
   /*  */
@@ -9187,6 +9269,7 @@
     el,
     hydrating
   ) {
+    debugger
     el = el && inBrowser ? query(el) : undefined;
     return mountComponent(this, el, hydrating)
   };
@@ -9235,6 +9318,7 @@
     text,
     delimiters
   ) {
+    debugger
     var tagRE = delimiters ? buildRegex(delimiters) : defaultTagRE;
     if (!tagRE.test(text)) {
       return
@@ -9432,6 +9516,7 @@
   }
 
   function parseHTML (html, options) {
+    debugger
     var stack = [];
     var expectHTML = options.expectHTML;
     var isUnaryTag$$1 = options.isUnaryTag || no;
@@ -9743,6 +9828,7 @@
     template,
     options
   ) {
+    debugger
     warn$2 = options.warn || baseWarn;
 
     platformIsPreTag = options.isPreTag || no;
@@ -9837,6 +9923,7 @@
       }
     }
 
+    // 删除结尾的空格文本
     function trimEndingWhitespace (el) {
       // remove trailing whitespace node
       if (!inPre) {
@@ -9851,6 +9938,7 @@
       }
     }
 
+    // 检查标签类型以及标签属性的合法性
     function checkRootConstraints (el) {
       if (el.tag === 'slot' || el.tag === 'template') {
         warnOnce(
@@ -9878,6 +9966,7 @@
       shouldKeepComment: options.comments,
       outputSourceRange: options.outputSourceRange,
       start: function start (tag, attrs, unary, start$1, end) {
+        debugger
         // check namespace.
         // inherit parent ns if there is one
         var ns = (currentParent && currentParent.ns) || platformGetTagNamespace(tag);
@@ -9965,6 +10054,7 @@
       },
 
       end: function end (tag, start, end$1) {
+        debugger
         var element = stack[stack.length - 1];
         // pop stack
         stack.length -= 1;
@@ -9976,6 +10066,7 @@
       },
 
       chars: function chars (text, start, end) {
+        debugger
         if (!currentParent) {
           {
             if (text === template) {
@@ -10047,6 +10138,7 @@
         }
       },
       comment: function comment (text, start, end) {
+        debugger
         // adding anything as a sibling to the root node is forbidden
         // comments should still be allowed, but ignored
         if (currentParent) {
@@ -10063,7 +10155,8 @@
         }
       }
     });
-    // console.log('root',root)
+    console.log('root',root)
+    window.root = root
     return root
   }
 
@@ -10819,6 +10912,7 @@
   }
 
   function markStaticRoots (node, isInFor) {
+    debugger
     if (node.type === 1) {
       if (node.static || node.once) {
         node.staticInFor = isInFor;
@@ -10849,6 +10943,7 @@
   }
 
   function isStatic (node) {
+    debugger
     if (node.type === 2) { // expression
       return false
     }
@@ -11074,7 +11169,7 @@
 // 编译器
   var CodegenState = function CodegenState (options) {
     this.options = options;
-    console.log(this,'option',options)
+    // console.log(this,'option',options)
     this.warn = options.warn || baseWarn;
     this.transforms = pluckModuleFunction(options.modules, 'transformCode');
     this.dataGenFns = pluckModuleFunction(options.modules, 'genData');
@@ -11092,10 +11187,11 @@
     ast,
     options
   ) {
+    debugger
     var state = new CodegenState(options);
     // fix #11483, Root level <script> tags should not be rendered.
     var code = ast ? (ast.tag === 'script' ? 'null' : genElement(ast, state)) : '_c("div")';
-    console.log(state,ast,'state')
+    // console.log(state,ast,'state')
     return {
       render: ("with(this){return " + code + "}"),
       staticRenderFns: state.staticRenderFns
@@ -11103,6 +11199,7 @@
   }
 
   function genElement (el, state) {
+    debugger
     if (el.parent) {
       el.pre = el.pre || el.parent.pre;
     }
@@ -11812,6 +11909,7 @@
   }
 
   // [arguments] compile  fn
+  // 通过[fn]createFunction将string转成fn
   function createCompileToFunctionFn (compile) {
     var cache = Object.create(null);
 
@@ -11820,6 +11918,7 @@
       options,
       vm
     ) {
+      debugger
       options = extend({}, options);
       var warn$$1 = options.warn || warn;
       delete options.warn;
@@ -11916,11 +12015,14 @@
   /*  */
 
   function createCompilerCreator (baseCompile) {
+    debugger
     return function createCompiler (baseOptions) {
+      debugger
       function compile (
         template,
         options
       ) {
+        debugger
         var finalOptions = Object.create(baseOptions);
         var errors = [];
         var tips = [];
@@ -11969,7 +12071,8 @@
 
         finalOptions.warn = warn;
 
-        var compiled = baseCompile(template.trim(), finalOptions);
+        var compiled = baseCompile(template, finalOptions);
+        // console.log('compiled===',compiled)
         {
           detectErrors(compiled.ast, warn);
         }
@@ -11988,18 +12091,23 @@
   /*  */
 
   // `createCompilerCreator` allows creating compilers that use alternative
-  // parser/optimizer/codegen, e.g the SSR optimizing compiler.
+  // parser解析器/optimizer优化/codegen编译器, e.g the SSR optimizing compiler.
   // Here we just export a default compiler using the default parts.
   var createCompiler = createCompilerCreator(function baseCompile (
     template,
     options
   ) {
+    debugger
     var ast = parse(template.trim(), options);
+    debugger
     if (options.optimize !== false) {
       optimize(ast, options);
     }
+    debugger
     var code = generate(ast, options);
-    console.log('ast=',ast)
+    console.log('code',code)
+    console.log('ast',ast)
+    debugger
     return {
       ast: ast,
       render: code.render,
@@ -12042,6 +12150,7 @@
     el,
     hydrating
   ) {
+    debugger
     el = el && query(el);
     console.log('el====',el,this)
     /* istanbul ignore if */
@@ -12093,8 +12202,10 @@
           delimiters: options.delimiters,
           comments: options.comments
         }, this);
+        debugger
         var render = ref.render;
         var staticRenderFns = ref.staticRenderFns;
+
         options.render = render;
         options.staticRenderFns = staticRenderFns;
 
@@ -12113,6 +12224,7 @@
    * of SVG elements in IE as well.
    */
   function getOuterHTML (el) {
+    // debugger
     if (el.outerHTML) {
       return el.outerHTML
     } else {
@@ -12127,3 +12239,31 @@
   return Vue;
 
 }));
+
+/***
+ * createCompiler = createCompilerCreator(baseCompile)
+ * 
+ * 
+ * createCompilerCreator(baseCompile)
+ * @params [fn] baseCompile
+ * **baseCompile
+ * ***@params
+ * *** template
+ * *** options
+ * ***@return
+ * *** ast
+ * *** render
+ * *** staticRenderFns
+ * @return
+ * ** [fn] createCompiler(baseOptions)
+ * **** @return 
+ * ****** compile
+ * ****** compileToFunctions
+ * createCompileToFunctionFn(compile)
+ * @return 
+ * ****[fn] compileToFunctions(temp,options,vm)
+ * **** @return
+ * ****** render
+ * ****** staticRenderFns
+ * 
+ **/
