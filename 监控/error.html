@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>error 监控</title>
+</head>
+
+<body>
+  <img src="http://localhost:8888/nottrue.jpg">
+  <script src="./error.js"></script>
+  <script>
+    // const { getErrorKey, mechanismType, getErrorUid } = errorConfig
+    const initResourceError = () => {
+      const handler = (event) => {
+        console.log(event,'event')
+        event.preventDefault(); // 阻止向上抛出控制台报错
+        // 如果不是跨域脚本异常,就结束
+        if (getErrorKey(event) !== mechanismType.RS) return;
+        const target = event.target
+        const exception = {
+          // 上报错误归类
+          mechanism: {
+            type: mechanismType.RS,
+          },
+          // 错误信息
+          value: '',
+          // 错误类型
+          type: 'ResourceError',
+          // 用户行为追踪 breadcrumbs 在 errorSendHandler 中统一封装
+          // 页面基本信息 pageInformation 也在 errorSendHandler 中统一封装
+          // 错误的标识码
+          errorUid: getErrorUid(`${mechanismType.RS}-${target.src}-${target.tagName}`),
+          // 附带信息
+          meta: {
+            url: target.src,
+            html: target.outerHTML,
+            type: target.tagName,
+          },
+        };
+        console.log(exception,'exception')
+        // 一般错误异常立刻上报，不用缓存在本地
+        // this.errorSendHandler(exception);
+      };
+      window.addEventListener('error', (event) => handler(event), true);
+    };
+    initResourceError()
+    a++
+  </script>
+</body>
+
+</html>
