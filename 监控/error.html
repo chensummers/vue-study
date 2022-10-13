@@ -9,46 +9,25 @@
 </head>
 
 <body>
-  <img src="http://localhost:8888/nottrue.jpg">
+  <!-- <img src="http://localhost:8888/nottrue.jpg"> -->
+  <svg 
+    stroke="red"
+    fill="grey"
+    viewBox="-100 -100 600 600"
+  >
+    <circle cx="50" cy="50" r="40" />
+
+  </svg>
   <script src="./error.js"></script>
+  <!-- <script async src="https://flowcloud-gateway-dev.xiaoxiangyoupin.cn/flow-api/payoutResultQuery"></script> -->
   <script>
-    // const { getErrorKey, mechanismType, getErrorUid } = errorConfig
-    const initResourceError = () => {
-      const handler = (event) => {
-        console.log(event,'event')
-        event.preventDefault(); // 阻止向上抛出控制台报错
-        // 如果不是跨域脚本异常,就结束
-        if (getErrorKey(event) !== mechanismType.RS) return;
-        const target = event.target
-        const exception = {
-          // 上报错误归类
-          mechanism: {
-            type: mechanismType.RS,
-          },
-          // 错误信息
-          value: '',
-          // 错误类型
-          type: 'ResourceError',
-          // 用户行为追踪 breadcrumbs 在 errorSendHandler 中统一封装
-          // 页面基本信息 pageInformation 也在 errorSendHandler 中统一封装
-          // 错误的标识码
-          errorUid: getErrorUid(`${mechanismType.RS}-${target.src}-${target.tagName}`),
-          // 附带信息
-          meta: {
-            url: target.src,
-            html: target.outerHTML,
-            type: target.tagName,
-          },
-        };
-        console.log(exception,'exception')
-        // 一般错误异常立刻上报，不用缓存在本地
-        // this.errorSendHandler(exception);
-      };
-      window.addEventListener('error', (event) => handler(event), true);
-    };
     initResourceError()
-    a++
+    initJsError()
+    initPromiseError()
+    initCorsError()
+    // Promise.resolve().then(() => console.log(c));
   </script>
+
 </body>
 
 </html>
